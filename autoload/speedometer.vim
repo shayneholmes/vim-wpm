@@ -24,10 +24,13 @@ function! s:setup_timer()
   augroup speedometer
     autocmd InsertEnter * call speedometer#start_speedometer()
     autocmd InsertLeavePre * call speedometer#stop_speedometer()
+  augroup END
 endfunction
 
 function speedometer#start_speedometer()
-  echom "Starting speedometer"
+  if exists('b:speedometer_timer_id')
+    return
+  endif
   let b:speedometer_timer_id = timer_start(1000, {-> s:update_speedometer()}, {'repeat': -1})
 endfunction
 
@@ -36,6 +39,7 @@ function speedometer#stop_speedometer()
     return
   endif
   call timer_stop(b:speedometer_timer_id)
+  unlet b:speedometer_timer_id
 endfunction
 
 " computation {{{1
