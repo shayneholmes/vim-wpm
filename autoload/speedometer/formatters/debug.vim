@@ -1,6 +1,3 @@
 function speedometer#formatters#debug#to_string(metrics)
-  return printf(
-        \ '%d updates | %s',
-        \ get(b:, 'speedometer_updates', 0),
-        \ a:metrics)
+  return printf('%ds %fw %fwpm %du', a:metrics.seconds, a:metrics.words, a:metrics.wpm, a:metrics.updates)
 endfunction

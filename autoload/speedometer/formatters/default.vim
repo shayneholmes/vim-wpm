@@ -1,3 +1,3 @@
 function speedometer#formatters#default#to_string(metrics)
-  return printf('¶ %4d', a:metrics['chars'])
+  return printf('%4dwpm', a:metrics['wpm'])
 endfunction
