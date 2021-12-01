@@ -52,7 +52,8 @@ function s:update_speedometer()
   let l:wordcount = s:get_wordcount()
   if !exists('b:speedometer_counts_over_time')
     " Initialize ring buffer and vars needed to manage it.
-    " First, the ring buffer.
+    " First, the ring buffer. It starts empty, and we'll build it out over the
+    " first lookback period.
     let b:speedometer_counts_over_time = []
     " Boolean state variable that indicates whether we've filled the ring
     " buffer.
@@ -82,6 +83,7 @@ function s:update_speedometer()
   endif
   " Calculate speed
   let l:wpm = float2nr((l:wordcount - l:last_count) * 60 / l:period)
+  let l:wpm = max([0, l:wpm]) " replace negative numbers with zero
   " Update entry in ring buffer
   let b:speedometer_counts_over_time[b:speedometer_next_index] = l:wordcount
   " Update pointer
@@ -96,6 +98,15 @@ function s:update_speedometer()
         \ 'wpm': l:wpm,
         \ 'seconds': l:period,
         \ }
+  " Refresh the ruler. Clearing and redrawing the whole screen seems wasteful,
+  " but it does the job.
+  " Things that didn't work:
+  " :redraw
+  " :redrawstatus
+  " :redrawstatus!
+  " Also tried setting an option without changing its value, as recommended by
+  " the help for 'statusline'
+  " :let &rulerformat = &rulerformat
   redraw!
 endfunction
 
