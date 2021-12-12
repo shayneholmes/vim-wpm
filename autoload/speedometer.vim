@@ -31,9 +31,11 @@ function! s:setup_timer()
 endfunction
 
 function speedometer#start_speedometer()
+  call s:initialize()
   if exists('b:speedometer_timer_id')
     return
   endif
+  call s:update_speedometer() " call it once
   let b:speedometer_timer_id = timer_start(1000, {-> s:update_speedometer()}, {'repeat': -1})
 endfunction
 
@@ -51,15 +53,7 @@ function s:update_speedometer()
   " Compute current count
   let l:wordcount = s:get_wordcount()
   if !exists('b:speedometer_counts_over_time')
-    " Initialize ring buffer and vars needed to manage it.
-    " First, the ring buffer. It starts empty, and we'll build it out over the
-    " first lookback period.
-    let b:speedometer_counts_over_time = []
-    " Boolean state variable that indicates whether we've filled the ring
-    " buffer.
-    let b:speedometer_full = 0
-    " Index of the next location in the ring buffer to be filled. New data will be placed here.
-    let b:speedometer_next_index = 0
+    call s:initialize()
   endif
   " Update ring buffer, set last count and period
   if !b:speedometer_full
@@ -108,6 +102,18 @@ function s:update_speedometer()
   " the help for 'statusline'
   " :let &rulerformat = &rulerformat
   redraw!
+endfunction
+
+function s:initialize()
+  " Initialize ring buffer and vars needed to manage it.
+  " First, the ring buffer. It starts empty, and we'll build it out over the
+  " first lookback period.
+  let b:speedometer_counts_over_time = []
+  " Boolean state variable that indicates whether we've filled the ring
+  " buffer.
+  let b:speedometer_full = 0
+  " Index of the next location in the ring buffer to be filled. New data will be placed here.
+  let b:speedometer_next_index = 0
 endfunction
 
 function s:get_wordcount()
