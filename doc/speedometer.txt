@@ -1,0 +1,70 @@
+*speedometer.txt*                     Show how fast you're typing into a buffer.
+
+                    ━━━ ┏━┓┏━┓┏━╸┏━╸╺┳┓┏━┓┏┳┓┏━╸╺┳╸┏━╸┏━┓~
+                   ━ ━━ ┗━┓┣━┛┣╸ ┣╸  ┃┃┃ ┃┃┃┃┣╸  ┃ ┣╸ ┣┳┛~
+                  ━━━ ━ ┗━┛╹  ┗━╸┗━╸╺┻┛┗━┛╹ ╹┗━╸ ╹ ┗━╸╹┗╸~
+
+Author: Shayne Holmes <http://shayneholm.es/>
+Repo:   https://github.com/shayneholmes/vim-wpm
+
+==============================================================================
+Introduction                                          *speedometer-introduction*
+
+Shows your current typing speed.
+
+On computing typing speed:
+
+- Speed is measured over a sliding ten-second window, reset whenever you enter
+  insert mode.
+
+- Speed measures increase in text size, not keystrokes: backspaces and other
+  deletion commands are counterproductive churn, and they count against you.
+
+==============================================================================
+Commands and usage
+
+If using `airline`, Speedometer will auto-register itself to the 'Z' section.
+
+You can also use the expression value `SpeedometerValue()` in `'statusline'` or
+`'rulerformat'`:
+
+  let &rulerformat = "%{SpeedometerValue()}"
+
+==============================================================================
+Options                                                    *speedometer-options*
+
+`speedometer#lookback_seconds` (default: 10)
+
+The length of the period over which speed is calculated.
+
+==============================================================================
+Custom formatting                                       *speedometer-formatting*
+
+By default, Speedometer renders your speed in three digits. You can customize
+this by defining and referencing your own formatter, like this:
+
+`speedometer#formatter = 'my_formatter'`
+
+The referenced formatter is an autoloaded function that returns a string,
+based on a dictionary containing a few keys:
+
+- `wpm` is the current computed speed.
+
+- `words` is the current word count of the buffer. For purposes of measuring
+  words per minute, this is equal to the number of characters divided by five.
+
+- `seconds` is the number of seconds over which speed has been measured,
+  ranging from 1 to `speedometer#lookback_seconds`.
+
+- `updates` is a monotonic counter of the number of times speed has been
+  computed.
+
+As an example:
+
+  function speedometer#formatters#my_formatter#to_string(metrics)
+    return printf('%fwpm over %ds seconds', a:metrics.wpm, a:metrics.seconds)
+  endfunction
+
+A reasonable place for this definition would be in a file called
+`autoload/speedometer/formatters/my_formatter.vim`.
+

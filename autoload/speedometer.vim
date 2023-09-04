@@ -1,6 +1,6 @@
 " vim: et ts=2 sts=2 sw=2 fdm=marker
 
-let s:lookback_periods = get(g:, 'speedometer#lookback', 10)
+let s:lookback_periods = get(g:, 'speedometer#lookback_seconds', 10)
 " let g:speedometer#formatter = 'debug'
 
 " wrapper {{{1
