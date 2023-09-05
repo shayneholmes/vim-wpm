@@ -28,7 +28,7 @@ If using `airline`, Speedometer will auto-register itself to the 'Z' section.
 You can also use the expression value `SpeedometerValue()` in `'statusline'` or
 `'rulerformat'`:
 
-  let &rulerformat = "%{SpeedometerValue()}"
+  let &rulerformat = "%{SpeedometerValue()}"~
 
 ==============================================================================
 Options                                                    *speedometer-options*
@@ -43,7 +43,7 @@ Custom formatting                                       *speedometer-formatting*
 By default, Speedometer renders your speed in three digits. You can customize
 this by defining and referencing your own formatter, like this:
 
-`speedometer#formatter = 'my_formatter'`
+  speedometer#formatter = 'my_formatter'~
 
 The referenced formatter is an autoloaded function that returns a string,
 based on a dictionary containing a few keys:
@@ -61,10 +61,9 @@ based on a dictionary containing a few keys:
 
 As an example:
 
-  function speedometer#formatters#my_formatter#to_string(metrics)
-    return printf('%fwpm over %ds seconds', a:metrics.wpm, a:metrics.seconds)
-  endfunction
+function speedometer#formatters#my_formatter#to_string(metrics) ~
+  return printf('%fwpm over %ds seconds', a:metrics.wpm, a:metrics.seconds) ~
+endfunction ~
 
 A reasonable place for this definition would be in a file called
 `autoload/speedometer/formatters/my_formatter.vim`.
-
