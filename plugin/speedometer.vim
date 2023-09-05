@@ -1,6 +1,6 @@
 " vim: et ts=2 sts=2 sw=2 fdm=marker
 
-" TODO: Check for any needed vim functions
+" Check for used vim functions
 if
       \ !exists('*wordcount')
       \ || !exists('*timer_start')
@@ -10,12 +10,12 @@ endif
 
 let g:speedometer_loaded = 1
 
-" get wordcount
+" get current speed
 function! g:SpeedometerValue()
   return speedometer#get()
 endfunction
 
-" airline functions
+" Register with airline if it exists
 if !empty(globpath(&runtimepath, 'plugin/airline.vim', 1))
   function! g:SpeedometerAirlinePlugin(...)
     function! g:SpeedometerAirlineFormat()
