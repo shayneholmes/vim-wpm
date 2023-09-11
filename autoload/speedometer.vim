@@ -92,16 +92,10 @@ function s:update_speedometer()
         \ 'wpm': l:wpm,
         \ 'seconds': l:period,
         \ }
-  " Refresh the ruler. Clearing and redrawing the whole screen seems wasteful,
-  " but it does the job.
-  " Things that didn't work:
-  " :redraw
-  " :redrawstatus
-  " :redrawstatus!
-  " Also tried setting an option without changing its value, as recommended by
-  " the help for 'statusline'
-  " :let &rulerformat = &rulerformat
-  redraw!
+  " Run any user-supplied post-update function.
+  if exists('#User#SpeedometerUpdate')
+    doautocmd User SpeedometerUpdate
+  endif
 endfunction
 
 function s:initialize()

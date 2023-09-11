@@ -30,6 +30,13 @@ You can also use the expression value `SpeedometerValue()` in `'statusline'` or
 
   let &rulerformat = "%{SpeedometerValue()}"~
 
+Callbacks
+
+If you want to run additional commands when Speedometer updates the speed,
+this with the `SpeedometerUpdate` event. The event runs once a second, just
+after the speed has been updated. Get the updated results by calling
+`SpeedometerValue()`.
+
 ==============================================================================
 Options                                                    *speedometer-options*
 
@@ -67,3 +74,13 @@ endfunction ~
 
 A reasonable place for this definition would be in a file called
 `autoload/speedometer/formatters/my_formatter.vim`.
+
+==============================================================================
+Bugs                                                          *speedometer-bugs*
+
+If you use `SpeedometerValue()` inside `'rulerformat'`, vim won't update it
+automatically, or even with any of the tricks in the help for `'statusline'`.
+A workaround that seems to work, even if it's a little drastic, is
+hard-redrawing the screen:
+
+autocmd! User SpeedometerUpdate redraw!~
