@@ -10,32 +10,30 @@ Repo:   https://github.com/shayneholmes/vim-wpm
 ==============================================================================
 Introduction                                          *speedometer-introduction*
 
-Shows your current typing speed.
+Shows your current typing speed, measured over a sliding ten-second window
+that is reset whenever you enter insert mode.
 
-On computing typing speed:
-
-- Speed is measured over a sliding ten-second window, reset whenever you enter
-  insert mode.
-
-- Speed measures increase in text size, not keystrokes: backspaces and other
-  deletion commands are counterproductive churn, and they count against you.
+Speed measures increase in buffer size, not keystroke count: backspaces and
+other deletion commands are counterproductive churn.
 
 ==============================================================================
-Commands and usage
+Commands and usage                                           *speedometer-usage*
 
-If using `airline`, Speedometer will auto-register itself to the 'Z' section.
+If `airline` is active, Speedometer will auto-register itself to the 'Z'
+section.
 
-You can also use the expression value `SpeedometerValue()` in `'statusline'` or
-`'rulerformat'`:
+You can register it manually, using the expression value `SpeedometerValue()`
+in `'statusline'` or `'rulerformat'`:
 
   let &rulerformat = "%{SpeedometerValue()}"~
 
 Callbacks
 
-If you want to run additional commands when Speedometer updates the speed,
-this with the `SpeedometerUpdate` event. The event runs once a second, just
-after the speed has been updated. Get the updated results by calling
-`SpeedometerValue()`.
+Just after the speed has been updated, Speedometer invokes the autocommand
+event `SpeedometerUpdate`. You may get the updated results by calling
+`SpeedometerValue()`. For example, to update
+
+  autocmd! User SpeedometerUpdate echon~
 
 ==============================================================================
 Options                                                    *speedometer-options*
@@ -68,9 +66,9 @@ based on a dictionary containing a few keys:
 
 As an example:
 
-function speedometer#formatters#my_formatter#to_string(metrics) ~
-  return printf('%fwpm over %ds seconds', a:metrics.wpm, a:metrics.seconds) ~
-endfunction ~
+  function speedometer#formatters#my_formatter#to_string(metrics) ~
+    return printf('%fwpm over %ds seconds', a:metrics.wpm, a:metrics.seconds) ~
+  endfunction ~
 
 A reasonable place for this definition would be in a file called
 `autoload/speedometer/formatters/my_formatter.vim`.
@@ -79,8 +77,7 @@ A reasonable place for this definition would be in a file called
 Bugs                                                          *speedometer-bugs*
 
 If you use `SpeedometerValue()` inside `'rulerformat'`, vim won't update it
-automatically, or even with any of the tricks in the help for `'statusline'`.
-A workaround that seems to work, even if it's a little drastic, is
-hard-redrawing the screen:
+until you type something, even with any of the tricks in the help for
+`'statusline'`. A workaround that seems to work is to echo nothing:
 
-autocmd! User SpeedometerUpdate redraw!~
+  autocmd! User SpeedometerUpdate echon~
