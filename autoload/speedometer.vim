@@ -28,6 +28,9 @@ function! s:setup_timer()
     autocmd InsertEnter * call speedometer#start_speedometer()
     autocmd InsertLeavePre * call speedometer#stop_speedometer()
   augroup END
+  if mode() == "i"
+    call speedometer#start_speedometer()
+  endif
 endfunction
 
 function speedometer#start_speedometer()
